@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>Game of thornes</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="./css/viewStyle.css">
+</head>
+<body>
+<div id="block">
+</div>
+</body>
+<script type="text/javascript">
+	function update(){
+		$.ajax({
+			url:"./test.php",
+			type: "POST",
+			success: function (data){
+			 $( "#block" ).html(data);
+			}
+		});
+	}
+	 setInterval(update, 2000);
+	 update();
+
+</script>
+<script type="text/javascript" src="js/jquery.js"></script>
+</html>

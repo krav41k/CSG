@@ -1,0 +1,55 @@
+﻿<html>
+  <head>
+    <meta charset="utf-8">
+    <title>action controle</title>
+    <link rel="stylesheet" href="./css/questionsMakerStyle.css">
+  </head>
+  <body>
+    <div class="question-panel static-player">
+      <a class="text-field">Stage:</a>
+      <input class="static-object" type="text" id="stage" size="1" maxlength="1" placeholder="#"/>
+      <a class="text-field">ID:</a>
+      <input class="static-object" type="text" id="id" size="2" maxlength="2" placeholder="id"/>
+	  <a class="text-field">Q.type:</a>
+	  <select class="static-object" id="Qtype">
+		<option>text</option>
+		<option>img</option>
+		</select>
+	  <a class="text-field">A.type:</a>
+	  <select class="static-object" id="Atype">
+		<option>text</option>
+		<option>img</option>
+		</select>
+      <br>
+      <!-- <input class="static-object" type="text" id="question" size="50" placeholder="question"/> -->
+      <textarea class="static-object" id="question" cols="40" rows="5" placeholder="Enter your question."></textarea><br>
+      <textarea class="static-object" id="answer" cols="40" rows="1" placeholder="Enter answer for question."></textarea><br>
+      <input type="button" onclick="add()" class="player-object" value="add">
+
+    </div>
+  </body>
+  <script type="text/javascript">
+    function add(){
+      var Qdata = $("#question").val();
+      var Adata = $("#answer").val();
+      var Qnumber = $("#id").val();
+      var Qstage = $("#stage").val();
+	  var Qtype = $("#Qtype").val();
+	  var Atype = $("#Atype").val();
+      $.post(
+      "./page_other/questionUploader.php",
+      {
+      func:"add",
+      Qnumber:Qnumber,
+      Qstage:Qstage,
+      Qdata:Qdata,
+      Adata:Adata,
+	  Qtype:Qtype,
+	  Atype:Atype
+      }
+      );
+      alert("qq");
+    }
+  </script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+</html>

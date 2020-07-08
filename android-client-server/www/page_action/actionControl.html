@@ -1,0 +1,255 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <title>action control</title>
+    <link rel="stylesheet" href="./css/actionAdminka.css">
+</head>
+<body>
+
+	<div class='firstBlock'>
+		<div class='questionBlock block'>
+		
+		</div>
+		<div class='jokerList block'>
+			<b class="text-field">joker:</b>
+			<select class="static-object" id="joker-select">
+				<option checked>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+				<option>9</option>
+				<option>10</option>
+			</select>
+			<input type="button" onclick="playJoker('joker')" class="static-object" value="ok">
+		</div>
+		<div class='dayList block'>
+		<a class="text-field">day:</a>
+			<select class="static-object" id="day-select" onchange="setday()">
+				<option checked>1</option>
+				<option>2</option>
+				<option>3</option>
+			</select>
+		</div>
+	</div>
+	
+	<div class='secondBlock'>
+		<div class='timer block'>
+			<input class="static-object width-object" type="text" id="second" size="10" placeholder="seconds"/>
+			<br>
+			<input type="button" onclick="setTime()" class="static-object width-object" value="change time">
+			<br>
+			<input type="button" onclick="pause()" class="static-object width-object" value="pause/resume">
+		</div>
+		<div class='gameControl block'>
+			<input type="button" onclick="GameControl('nextQ')" class="static-object width-object" value="next Q">
+			<input type="button" onclick="GameControl('showA')" class="static-object width-object" value="show A">
+		</div>
+	</div>
+	<br>
+	<div class='footterBlock block'>
+		<div class='selectPlayers width-object'>
+			<select style='width:49%' class="static-object " id="first-player-select">
+			<option>player1</option>
+			<option>player2</option>
+			<option>player3</option>
+			<option>player4</option>
+			<option>player5</option>
+			<option>player6</option>
+			<option>player7</option>
+			<option>player8</option>
+			<option>player9</option>
+			<option>player0</option>
+			</select>
+			<select style='width:49%' class="static-object" id="second-player-select">
+			<option>player1</option>
+			<option>player2</option>
+			<option>player3</option>
+			<option>player4</option>
+			<option>player5</option>
+			<option>player6</option>
+			<option>player7</option>
+			<option>player8</option>
+			<option>player9</option>
+			<option>player0</option>
+			</select>
+		</div>
+		<input id="range" type="range" value="1" min="0" max="2" step="1"/>
+		<input type="button" onclick="nextRound()" class="static-object width-object" value="show A">
+		<br>
+		<div class='duelBlock'>
+			<input type="button" onclick="startDuel()" class="static-object width-object" value="start duel">
+			<br>
+			<input type="button" onclick="stopDuel()" class="static-object width-object" value="stop  duel">
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+    function update(){
+      $.ajax({
+        url:"./page_action/updateAdminAction.php",
+        type: "POST",
+        success: function (data){
+          $( ".questionBlock" ).html(data);
+        }
+      });
+    }
+    window.onload = update;
+	setTimeout(setday, 50);
+	
+    function setTime(){
+      var time = $("#second").val();;
+    $.post(
+  	"./page_action/actionDB.php",
+  	{
+    func:'eventTime',
+  	data:time
+  	}
+  	);
+  	}
+	
+    function pause(){
+      $.post(
+      "./page_action/actionDB.php",
+      {
+      func:'setStatus',
+      data:'none'
+      }
+      );
+    }
+	
+    function setday(){
+      var data = $("#day-select").val();
+      $.post(
+      "./page_action/actionDB.php",
+      {
+      func:'setday',
+      data:data
+      }
+      );
+    }
+	
+    function playJoker(joker){
+	var isCheck = confirm("Сыграть джокера?");
+
+		if(isCheck){
+			var data = $("#joker-select").val();
+			$.post(
+			"./page_action/actionDB.php",
+			{
+			func:'playjoker',
+			data:data
+			}
+			);
+		}
+    }
+	
+    function changeStage(data){
+      $.post(
+      "./page_action/actionDB.php",
+      {
+      func:'changeStage',
+      data:data
+      }
+      );
+	  setTimeout(update, 50);
+    }
+	
+    function changeQuestion(myRadio){
+      var data = myRadio.value;
+      $.post(
+      "./page_action/actionDB.php",
+      {
+      func:'changeQuestion',
+      data:data
+      }
+      );
+    }
+	
+	function GameControl(command){
+		if (command == 'showA'){
+			var isCheck = confirm("Показати відповідь?");
+			if(isCheck){
+				$.post(
+				"./page_action/actionDB.php",
+				{
+				func:command,
+				data:'none'
+				}
+				);
+				setTimeout(update, 500);
+			}
+		}else if(command == 'nextQ'){
+			var inp = document.getElementsByName('question');
+			for (var i = 0; i < inp.length; i++) {
+				if(inp[i].type == "radio" && inp[i].checked){
+					var isCheck = confirm("Перейти до наступного питання?");
+					if(isCheck){
+						$.post(
+						"./page_action/actionDB.php",
+						{
+						func:command,
+						data:'none'
+						}
+						);
+					break;
+					}
+				}
+			}
+		}
+	}
+	
+	function startDuel(){
+		var isCheck = confirm("Розпочати дуель?");
+		if(isCheck){
+			var first = $("#first-player-select").val();;
+			var second = $("#second-player-select").val();;
+			$.post(
+			"./page_action/actionDB.php",
+			{
+			func:'startDuel',
+			data:first,
+			data2:second
+			}
+			);
+		}
+  	}	
+	
+	function stopDuel(){
+		var isCheck = confirm("Зупинити дуель?");
+		if(isCheck){
+			$.post(
+			"./page_action/actionDB.php",
+			{
+			func:'stopDuel',
+			data:null
+			}
+			);
+		}
+  	}
+	
+	function nextRound(){
+		var isCheck = confirm("Показати правильну відповідь?");
+		if(isCheck){
+			var data = $("#range").val();
+			$.post(
+				"./page_action/actionDB.php",
+				{
+					func:'giveA',
+					data:data
+				}
+			);
+			if(data!='1'){
+			document.getElementById("range").value = "1";
+			setTimeout(nextRound, 2000);
+			}
+		}
+	}
+	
+	
+  </script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+</html>

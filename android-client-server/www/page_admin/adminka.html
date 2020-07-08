@@ -1,0 +1,156 @@
+﻿
+<html>
+<head>
+<title>admin</title>
+<link rel="stylesheet" href="./css/adminkaStyle.css">
+</head>
+<body>
+	<div class="admin-control">
+	
+	</div>
+	<div class="static-panel">
+		
+		<!-- <input type="button" onclick="send('updateAnswer','0')" class="static-object" value="next"> -->
+		<!-- <input type="button" onclick="send('clear','0')" class="static-object" value="clear"> -->
+		<!-- <input type="button" onclick="send('updateName','0')" class="static-object" value="name"> -->
+		
+		<select class="static-object" id="player-select">
+			<option>player1</option>
+			<option>player2</option>
+			<option>player3</option>
+			<option>player4</option>
+			<option>player5</option>
+			<option>player6</option>
+			<option>player7</option>
+			<option>player8</option>
+			<option>player9</option>
+			<option>player0</option>
+		</select>
+		<a class="password">color:</a>
+		<select class="static-object" id="shadow-select" onchange="sendshadow('shadow')">
+			<option disabled>color</option>
+			<option>red</option>
+			<option>blue</option>
+			<option>green</option>
+			<option>white</option>
+		</select>
+		<a class="password">background:</a>
+		<select class="static-object" id="background-select" onchange="sendbackground()">
+		<option select disabled>background</option>
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+		<option>5</option>
+		<option>6</option>
+		<option>7</option>
+		<option>8</option>
+		<option>9</option>
+		<option>10</option>
+		</select>
+		<br>
+		<input class="static-object" type="text" id="playername" size="10" placeholder="name"/>
+		<input type="button" onclick="sendname('name')" class="static-object" value="ok">
+		<a class="password">||</a>
+		<input class="static-object" type="text" id="playernickname" size="10" placeholder="nickname"/>
+		<input type="button" onclick="sendnickname('nickname')" class="static-object" value="ok">
+		<br>
+		<!-- <input type="button" onclick="send('rmk','0')" class="static-object" value="refresh"> -->
+		<input type="button" onclick="uploadNames()" class="static-object" value="upload player names">
+		<a class="password">||</a>
+		<input type="button" onclick="changeOrientation()" class="static-object" value="change orientation">
+		<!-- <a class="password">||</a> -->
+		<!-- <input type="button" onclick="showFloatNames()" class="static-object" value="show float names"> -->
+	</div>
+</body>
+<script type="text/javascript">
+	function update(){
+		$.ajax({
+			url:"./page_admin/updateAdmin.php",
+			type: "POST",
+			success: function (data){
+			 $( ".admin-control" ).html(data);
+			}
+		});
+	}
+	setInterval(update, 2000);
+
+	function send(data1,data2){
+	$.post(
+		"./page_admin/dealer.php",
+		{
+		func:data1,
+		id:data2
+		}
+		);
+	 }
+	function sendname(name){
+		var id =$("#player-select").val();
+		var data = $("#playername").val();
+	$.post(
+	"./page_admin/dealer.php",
+	{
+	func:name,
+	id:id,
+	data:data
+	}
+	);
+	 document.getElementById("playername").value = "";
+	}
+
+  function sendnickname(nickname){
+		var id =$("#player-select").val();
+		var data = $("#playernickname").val();
+	$.post(
+	"./page_admin/dealer.php",
+	{
+	func:nickname,
+	id:id,
+	data:data
+	}
+	);
+	 document.getElementById("playernickname").value = "";
+	}
+  function sendshadow(shadow){
+	var id =$("#player-select").val();
+	var data = $("#shadow-select").val();
+	$.post(
+	"./page_admin/dealer.php",
+	{
+	func:shadow,
+	id:id,
+	data:data
+	}
+	);
+  }
+  function sendbackground(){
+    var id = $("#player-select").val();
+    var data = $("#background-select").val();
+    $.post(
+    "./page_admin/dealer.php",
+    {
+    func:"background",
+    id:id,
+    data:data
+    }
+    );
+  }
+  function uploadNames(){
+	$.post(
+		"./page_admin/dealer.php",
+		{
+			func:"uploadNames"
+		}
+    );
+  }
+  function changeOrientation(){
+	$.post(
+		"./page_admin/dealer.php",
+		{
+			func:"changeOrientation"
+		}
+    );
+  }
+</script>
+<script type="text/javascript" src="js/jquery.js"></script>
+</html>

@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>player</title>
+<link rel="stylesheet" href="./css/PlayerStyle.css">
+</head>
+<body>
+<div class="static-player">
+<br>
+<select class="player-object" id="player-select">
+  <option>player1</option>
+  <option>player2</option>
+  <option>player3</option>
+  <option>player4</option>
+  <option>player5</option>
+  <option>player6</option>
+  <option>player7</option>
+  <option>player8</option>
+  <option>player9</option>
+  <option>player0</option>
+</select>
+<input class="player-object" type="text" id="name" size="10"/>
+<input class="player-object" type="text" id="password" size="4"/>
+<br>
+<br>
+<input class="player-object" type="text" id="answer"/>
+<br>
+<br>
+<input type="button" onclick="send('response')" class="player-object" value="send">
+</div>
+<div class='duelBlock'>
+</div>
+</body>
+<script type="text/javascript">
+	function update(){
+		var id =$("#player-select").val();
+		var password = $("#password").val();
+		$.ajax({
+			url:"./page_other/duelLoader.php",
+			type: "POST",
+			data: { id:id, password:password },
+			success: function (data){
+				$( ".duelBlock" ).html(data);
+			}
+		});
+    }
+    setInterval(update, 2000); 
+	 
+	function send(data1){
+		var id =$("#player-select").val();
+		var name =$("#name").val();
+		var answer = $("#answer").val();
+		var password = $("#password").val();
+		$.post(
+			"./page_admin/dealer.php",
+			{
+				func:data1,
+				id:id,
+				name:name,
+				answer:answer,
+				password:password
+			}
+		);
+	}
+	
+	function choose(answer,player){
+		$.post(
+		"./page_other/playerAnswer.php",
+		{
+		player:player,
+		answer:answer
+		}
+		);
+	}
+
+</script>
+<script type="text/javascript" src="js/jquery.js"></script>
+</html>

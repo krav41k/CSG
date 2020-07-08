@@ -1,0 +1,4 @@
+Доделать view под дуели и выбывание(добавить значки).
+Подправить duelBlock в player(добавить обработчики событий).
+Переписать SQL запросы 
+SELECT `Adata` FROM `questions` AS q, `game` AS g WHERE q.Qnumber=g.Gnumber AND q.Qstage=g.Gstage;
